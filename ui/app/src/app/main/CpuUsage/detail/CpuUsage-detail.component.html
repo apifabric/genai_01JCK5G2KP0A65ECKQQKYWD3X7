@@ -1,0 +1,103 @@
+<div class="container">
+<o-form-container breadcrumb="yes" breadcrumb-label-columns="id" breadcrumb-separator=", " class="fill-form">
+      <o-form #form attr="CpuUsage_form_edit" 
+        service="CpuUsage" 
+        entity="CpuUsage" 
+        fxLayout="column" 
+        show-header="yes" 
+        header-actions="R;I;U;D"
+        #oDetailForm keys="id" 
+        keys-sql-types="INTEGER" 
+        show-header-navigation="yes"
+        (onDataLoaded)="onDataLoaded($event)">
+
+  <o-row attr="row1" layout-align="start stretch">
+    <div fxLayout="row wrap" fxLayoutAlign="start start" fxFlex fxLayoutGap="14px">
+      
+      <o-integer-input #id attr="id" label=" id*" type="integer" editable="no" required="no" ></o-integer-input>
+      
+      <o-list-picker 
+        attr="log_entry_id"
+        service="LogEntry" 
+        entity="LogEntryType"
+        fxFlex="30" 
+        query-on-init="no" 
+        query-on-bind="yes" 
+        required="no" 
+        enabled="yes" 
+        filter="yes"
+        value-column="id" 
+        value-column-type="INTEGER"  
+        keys="id" 
+        columns="id;log_entry_id;id" 
+        title="log_entry_id"
+        visible-columns="id;id" 
+        separator=" - " width="680px" class="form-field">
+</o-list-picker>
+      
+      <o-integer-input #user_time attr="user_time" label="user_time" type="integer" editable="no" required="no" ></o-integer-input>
+      
+      <o-integer-input #system_time attr="system_time" label="system_time" type="integer" editable="no" required="no" ></o-integer-input>
+      
+      <o-integer-input #idle_time attr="idle_time" label="idle_time" type="integer" editable="no" required="no" ></o-integer-input>
+      
+    </div>
+  </o-row>
+      
+      <mat-tab-group fxFill>
+        
+        <mat-tab label="PROCESS-cpu_usage_id">
+    <div layout-padding>
+      <o-table 
+        attr="ProcessTable" 
+        service="Process" 
+        entity="Process" 
+        keys="id"
+        parent-keys="cpu_usage_id:id"
+        columns="name;cpu_usage_id;cpu_percentage;id;pid"  
+        horizontal-scroll="yes"
+        detail-form-route="Process" 
+        edit-form-route="Process"
+        visible-columns="name;cpu_usage_id;cpu_percentage;id;pid"  
+        sort-columns="name" 
+        query-rows="25" 
+        quick-filter="yes"
+        row-height="medium" 
+        select-all-checkbox="true" 
+        pageable="yes"  
+        auto-adjust="true" 
+        virtual-scroll="yes" 
+        insert-button="yes" 
+        delete-button="yes" 
+        fixed-header="true" 
+        class="vertical-padding-8"
+        edition-mode="dblclick" 
+        horizontal-scroll="yes" class="fill-form">
+        
+          <o-table-column #name attr="name" title=" name*" editable="no" required="no" content-align="left"></o-table-column>
+        
+          <o-table-column attr="cpu_usage_id" title="cpu_usage_id">
+    <o-table-cell-renderer-service attr="cpu_usage_id" 
+        service="CpuUsage" entity="CpuUsageType" columns="id;id"
+        parent-keys="id:cpu_usage_id"
+        value-column="id" keys="cpu_usage_id"
+        visible-columns="id" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+        
+          <o-table-column #cpu_percentage attr="cpu_percentage" title="cpu_percentage" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+        
+          <o-table-column #id attr="id" title="id" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+        
+          <o-table-column #pid attr="pid" title="pid" type="integer" editable="no" required="yes" content-align="center"></o-table-column>
+        
+        <o-table-paginator page-size-options="25;50;100"></o-table-paginator>
+      </o-table>
+    </div>
+</mat-tab>
+        
+      </mat-tab-group>
+      
+    </o-form>
+  </o-form-container>
+</div>

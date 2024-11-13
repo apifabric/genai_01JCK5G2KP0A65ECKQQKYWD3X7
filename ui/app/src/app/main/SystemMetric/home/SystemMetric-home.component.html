@@ -1,0 +1,46 @@
+<o-form-layout-manager attr="SystemMetric" mode="tab" title="SYSTEMMETRIC">
+    <div fxFill fxLayout="column" fxLayoutAlign="start">
+        <o-table 
+            attr="SystemMetricTable" 
+            service="SystemMetric" 
+            entity="SystemMetric" 
+            title="SYSTEMMETRIC"
+            keys="id"
+            columns="id;log_entry_id;memory_usage;disk_io;cpu_load" 
+            header-actions="R;D"
+            visible-columns="id;log_entry_id;memory_usage;disk_io;cpu_load"  
+            sort-columns="id" 
+            query-rows="20" 
+            quick-filter="yes"
+            row-height="medium" 
+            select-all-checkbox="true" 
+            pageable="yes"  
+            auto-adjust="true" 
+            virtual-scroll="yes" 
+            edition-mode="dblclick"
+            horizontal-scroll="yes"
+            show-title="yes"
+            export-button="yes">
+            
+            <o-table-column #id attr="id" title=" id*" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column attr="log_entry_id" title="log_entry_id">
+    <o-table-cell-renderer-service attr="log_entry_id" 
+        service="LogEntry" entity="LogEntryType" columns="id;id"
+        parent-keys="id:log_entry_id"
+        value-column="id" keys="log_entry_id"
+        visible-columns="id" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column #memory_usage attr="memory_usage" title="memory_usage" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column #disk_io attr="disk_io" title="disk_io" editable="no" required="no" content-align="left"></o-table-column>
+            
+            <o-table-column #cpu_load attr="cpu_load" title="cpu_load" editable="no" required="no" content-align="left"></o-table-column>
+            
+            <o-table-context-menu></o-table-context-menu>
+            <o-table-paginator page-size-options="24;48;96"></o-table-paginator>
+        </o-table>
+    </div>
+</o-form-layout-manager>

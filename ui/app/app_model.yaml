@@ -1,0 +1,497 @@
+about:
+  date: November 13, 2024 16:26:21
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+entities:
+  Alert:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: log_entry_id
+      template: integer
+      type: INTEGER
+    - name: message
+      template: text
+      type: VARCHAR(255)
+    - name: active
+      type: Boolean
+    - name: severity
+      template: text
+      type: VARCHAR(50)
+    description: Table to store alerts generated based on log analysis.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store alerts generated based on log analysis.
+    label: Alert
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: Alert
+  AlertSetting:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: condition
+      template: text
+      type: VARCHAR(100)
+    - name: active
+      type: Boolean
+    - name: threshold
+      template: integer
+      type: INTEGER
+    description: Table to configure alert thresholds and conditions.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to configure alert thresholds and conditions.
+    label: AlertSetting
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - alert_settings_id
+      name: ThresholdLogList
+      resource: ThresholdLog
+    type: AlertSetting
+  CpuUsage:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: log_entry_id
+      template: integer
+      type: INTEGER
+    - name: user_time
+      template: integer
+      type: INTEGER
+    - name: system_time
+      template: integer
+      type: INTEGER
+    - name: idle_time
+      template: integer
+      type: INTEGER
+    description: Table to track detailed CPU usage statistics.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to track detailed CPU usage statistics.
+    label: CpuUsage
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - cpu_usage_id
+      name: ProcessList
+      resource: Process
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: CpuUsage
+  LogEntry:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: timestamp
+      type: DATETIME
+    - name: message
+      template: text
+      type: VARCHAR(255)
+    - name: level
+      template: text
+      type: VARCHAR(50)
+    - name: source
+      template: text
+      type: VARCHAR(100)
+    description: Table to store log entries for system monitoring.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store log entries for system monitoring.
+    label: LogEntry
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: AlertList
+      resource: Alert
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: CpuUsageList
+      resource: CpuUsage
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: SystemEventList
+      resource: SystemEvent
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: SystemMetricList
+      resource: SystemMetric
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: ThresholdLogList
+      resource: ThresholdLog
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: UserActivityList
+      resource: UserActivity
+    type: LogEntry
+  Notification:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: message
+      template: text
+      type: VARCHAR(255)
+    - name: sent_at
+      type: DATETIME
+    - name: user_id
+      template: integer
+      type: INTEGER
+    description: Table to manage notifications sent to users.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to manage notifications sent to users.
+    label: Notification
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    type: Notification
+  Process:
+    columns:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR(150)
+    - name: cpu_usage_id
+      template: integer
+      type: INTEGER
+    - name: cpu_percentage
+      template: integer
+      type: INTEGER
+    - name: id
+      template: integer
+      type: INTEGER
+    - name: pid
+      required: true
+      template: integer
+      type: INTEGER
+    description: Table for storing information about processes in the system.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table for storing information about processes in the system.
+    label: Process
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - cpu_usage_id
+      name: cpu_usage
+      resource: CpuUsage
+    type: Process
+  SystemEvent:
+    columns:
+    - label: ' event_name*'
+      name: event_name
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR(100)
+    - name: log_entry_id
+      template: integer
+      type: INTEGER
+    - name: description
+      template: text
+      type: VARCHAR(255)
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to log significant system events.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: event_name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to log significant system events.
+    label: SystemEvent
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: SystemEvent
+  SystemMetric:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: log_entry_id
+      template: integer
+      type: INTEGER
+    - name: memory_usage
+      template: integer
+      type: INTEGER
+    - name: disk_io
+      template: text
+      type: VARCHAR(100)
+    - name: cpu_load
+      template: text
+      type: VARCHAR(10)
+    description: Table to store general system metrics.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store general system metrics.
+    label: SystemMetric
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: SystemMetric
+  SystemUser:
+    columns:
+    - label: ' username*'
+      name: username
+      required: true
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR(100)
+    - name: email
+      template: text
+      type: VARCHAR(150)
+    - name: active
+      type: Boolean
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to manage system user details.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: username
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to manage system user details.
+    label: SystemUser
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    type: SystemUser
+  ThresholdLog:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: alert_settings_id
+      template: integer
+      type: INTEGER
+    - name: log_entry_id
+      template: integer
+      type: INTEGER
+    - name: occurred_at
+      type: DATETIME
+    description: Table to log threshold breaches and events.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to log threshold breaches and events.
+    label: ThresholdLog
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - alert_settings_id
+      name: alert_settings
+      resource: AlertSetting
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: ThresholdLog
+  TopologyChange:
+    columns:
+    - label: ' component_name*'
+      name: component_name
+      search: true
+      sort: true
+      template: text
+      type: VARCHAR(100)
+    - name: change_description
+      template: text
+      type: VARCHAR(255)
+    - name: changed_at
+      type: DATETIME
+    - name: id
+      template: integer
+      type: INTEGER
+    description: Table to log changes in the system's topology.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: component_name
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to log changes in the system's topology.
+    label: TopologyChange
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    type: TopologyChange
+  UserActivity:
+    columns:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+      template: integer
+      type: INTEGER
+    - name: log_entry_id
+      template: integer
+      type: INTEGER
+    - name: action
+      template: text
+      type: VARCHAR(255)
+    - name: performed_at
+      type: DATETIME
+    - name: user_id
+      template: integer
+      type: INTEGER
+    description: Table to store user activities related to system operations.
+    detail_template: detail_template.html
+    exclude: 'false'
+    favorite: id
+    hidden: {}
+    home_template: home_template.html
+    info_list: Table to store user activities related to system operations.
+    label: UserActivity
+    mode: tab
+    new_template: new_template.html
+    primary_key:
+    - id
+    tab_groups:
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: UserActivity
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: false
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    mode: tab
+    pick_style: list
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: false

@@ -1,0 +1,303 @@
+about:
+  date: November 13, 2024 16:26:21
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 8
+  number_tables: 12
+info_toggle_checked: true
+resources:
+  Alert:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: log_entry_id
+    - name: message
+    - name: active
+      type: Boolean
+    - name: severity
+    description: Table to store alerts generated based on log analysis.
+    info_list: Table to store alerts generated based on log analysis.
+    tab_groups:
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: Alert
+    user_key: id
+  AlertSetting:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: condition
+    - name: active
+      type: Boolean
+    - name: threshold
+    description: Table to configure alert thresholds and conditions.
+    info_list: Table to configure alert thresholds and conditions.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - alert_settings_id
+      name: ThresholdLogList
+      resource: ThresholdLog
+    type: AlertSetting
+    user_key: id
+  CpuUsage:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: log_entry_id
+    - name: user_time
+    - name: system_time
+    - name: idle_time
+    description: Table to track detailed CPU usage statistics.
+    info_list: Table to track detailed CPU usage statistics.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - cpu_usage_id
+      name: ProcessList
+      resource: Process
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: CpuUsage
+    user_key: id
+  LogEntry:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: timestamp
+      type: DATETIME
+    - name: message
+    - name: level
+    - name: source
+    description: Table to store log entries for system monitoring.
+    info_list: Table to store log entries for system monitoring.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: AlertList
+      resource: Alert
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: CpuUsageList
+      resource: CpuUsage
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: SystemEventList
+      resource: SystemEvent
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: SystemMetricList
+      resource: SystemMetric
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: ThresholdLogList
+      resource: ThresholdLog
+    - direction: tomany
+      fks:
+      - log_entry_id
+      name: UserActivityList
+      resource: UserActivity
+    type: LogEntry
+    user_key: id
+  Notification:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: message
+    - name: sent_at
+      type: DATETIME
+    - name: user_id
+    description: Table to manage notifications sent to users.
+    info_list: Table to manage notifications sent to users.
+    type: Notification
+    user_key: id
+  Process:
+    attributes:
+    - label: ' name*'
+      name: name
+      search: true
+      sort: true
+    - name: cpu_usage_id
+    - name: cpu_percentage
+    - name: id
+    - name: pid
+      required: true
+    description: Table for storing information about processes in the system.
+    info_list: Table for storing information about processes in the system.
+    tab_groups:
+    - direction: toone
+      fks:
+      - cpu_usage_id
+      name: cpu_usage
+      resource: CpuUsage
+    type: Process
+    user_key: name
+  SystemEvent:
+    attributes:
+    - label: ' event_name*'
+      name: event_name
+      search: true
+      sort: true
+    - name: log_entry_id
+    - name: description
+    - name: id
+    description: Table to log significant system events.
+    info_list: Table to log significant system events.
+    tab_groups:
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: SystemEvent
+    user_key: event_name
+  SystemMetric:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: log_entry_id
+    - name: memory_usage
+    - name: disk_io
+    - name: cpu_load
+    description: Table to store general system metrics.
+    info_list: Table to store general system metrics.
+    tab_groups:
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: SystemMetric
+    user_key: id
+  SystemUser:
+    attributes:
+    - label: ' username*'
+      name: username
+      required: true
+      search: true
+      sort: true
+    - name: email
+    - name: active
+      type: Boolean
+    - name: id
+    description: Table to manage system user details.
+    info_list: Table to manage system user details.
+    type: SystemUser
+    user_key: username
+  ThresholdLog:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: alert_settings_id
+    - name: log_entry_id
+    - name: occurred_at
+      type: DATETIME
+    description: Table to log threshold breaches and events.
+    info_list: Table to log threshold breaches and events.
+    tab_groups:
+    - direction: toone
+      fks:
+      - alert_settings_id
+      name: alert_settings
+      resource: AlertSetting
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: ThresholdLog
+    user_key: id
+  TopologyChange:
+    attributes:
+    - label: ' component_name*'
+      name: component_name
+      search: true
+      sort: true
+    - name: change_description
+    - name: changed_at
+      type: DATETIME
+    - name: id
+    description: Table to log changes in the system's topology.
+    info_list: Table to log changes in the system's topology.
+    type: TopologyChange
+    user_key: component_name
+  UserActivity:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: log_entry_id
+    - name: action
+    - name: performed_at
+      type: DATETIME
+    - name: user_id
+    description: Table to store user activities related to system operations.
+    info_list: Table to store user activities related to system operations.
+    tab_groups:
+    - direction: toone
+      fks:
+      - log_entry_id
+      name: log_entry
+      resource: LogEntry
+    type: UserActivity
+    user_key: id
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'

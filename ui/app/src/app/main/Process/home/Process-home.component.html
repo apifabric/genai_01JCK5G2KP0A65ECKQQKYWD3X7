@@ -1,0 +1,46 @@
+<o-form-layout-manager attr="Process" mode="tab" title="PROCESS">
+    <div fxFill fxLayout="column" fxLayoutAlign="start">
+        <o-table 
+            attr="ProcessTable" 
+            service="Process" 
+            entity="Process" 
+            title="PROCESS"
+            keys="id"
+            columns="name;cpu_usage_id;cpu_percentage;id;pid" 
+            header-actions="R;D"
+            visible-columns="name;cpu_usage_id;cpu_percentage;id;pid"  
+            sort-columns="name" 
+            query-rows="20" 
+            quick-filter="yes"
+            row-height="medium" 
+            select-all-checkbox="true" 
+            pageable="yes"  
+            auto-adjust="true" 
+            virtual-scroll="yes" 
+            edition-mode="dblclick"
+            horizontal-scroll="yes"
+            show-title="yes"
+            export-button="yes">
+            
+            <o-table-column #name attr="name" title=" name*" editable="no" required="no" content-align="left"></o-table-column>
+            
+            <o-table-column attr="cpu_usage_id" title="cpu_usage_id">
+    <o-table-cell-renderer-service attr="cpu_usage_id" 
+        service="CpuUsage" entity="CpuUsageType" columns="id;id"
+        parent-keys="id:cpu_usage_id"
+        value-column="id" keys="cpu_usage_id"
+        visible-columns="id" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column #cpu_percentage attr="cpu_percentage" title="cpu_percentage" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column #id attr="id" title="id" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column #pid attr="pid" title="pid" type="integer" editable="no" required="yes" content-align="center"></o-table-column>
+            
+            <o-table-context-menu></o-table-context-menu>
+            <o-table-paginator page-size-options="24;48;96"></o-table-paginator>
+        </o-table>
+    </div>
+</o-form-layout-manager>

@@ -1,0 +1,51 @@
+<o-form-layout-manager attr="ThresholdLog" mode="tab" title="THRESHOLDLOG">
+    <div fxFill fxLayout="column" fxLayoutAlign="start">
+        <o-table 
+            attr="ThresholdLogTable" 
+            service="ThresholdLog" 
+            entity="ThresholdLog" 
+            title="THRESHOLDLOG"
+            keys="id"
+            columns="id;alert_settings_id;log_entry_id;occurred_at" 
+            header-actions="R;D"
+            visible-columns="id;alert_settings_id;log_entry_id;occurred_at"  
+            sort-columns="id" 
+            query-rows="20" 
+            quick-filter="yes"
+            row-height="medium" 
+            select-all-checkbox="true" 
+            pageable="yes"  
+            auto-adjust="true" 
+            virtual-scroll="yes" 
+            edition-mode="dblclick"
+            horizontal-scroll="yes"
+            show-title="yes"
+            export-button="yes">
+            
+            <o-table-column #id attr="id" title=" id*" type="integer" editable="no" required="no" content-align="center"></o-table-column>
+            
+            <o-table-column attr="alert_settings_id" title="alert_settings_id">
+    <o-table-cell-renderer-service attr="alert_settings_id" 
+        service="AlertSetting" entity="AlertSettingType" columns="id;id"
+        parent-keys="id:alert_settings_id"
+        value-column="id" keys="alert_settings_id"
+        visible-columns="id" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column attr="log_entry_id" title="log_entry_id">
+    <o-table-cell-renderer-service attr="log_entry_id" 
+        service="LogEntry" entity="LogEntryType" columns="id;id"
+        parent-keys="id:log_entry_id"
+        value-column="id" keys="log_entry_id"
+        visible-columns="id" separator=" - " width="680px">
+    </o-table-cell-renderer-service>
+</o-table-column>
+            
+            <o-table-column #occurred_at attr="occurred_at" title="occurred_at" editable="no" required="no" content-align="left"></o-table-column>
+            
+            <o-table-context-menu></o-table-context-menu>
+            <o-table-paginator page-size-options="24;48;96"></o-table-paginator>
+        </o-table>
+    </div>
+</o-form-layout-manager>

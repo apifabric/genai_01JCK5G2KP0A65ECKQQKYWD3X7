@@ -1,0 +1,79 @@
+{
+    "models": [
+        {
+            "classname": "LogEntry",
+            "code": "class LogEntry(Base):\n    \"\"\"description: Table to store log entries for system monitoring.\"\"\"\n    __tablename__ = 'log_entry'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    timestamp = Column(DateTime, default=datetime.utcnow)\n    message = Column(String(255))\n    level = Column(String(50))\n    source = Column(String(100))",
+            "description": "Table to store log entries for system monitoring.",
+            "name": "LogEntry"
+        },
+        {
+            "classname": "CPUUsage",
+            "code": "class CPUUsage(Base):\n    \"\"\"description: Table to track detailed CPU usage statistics.\"\"\"\n    __tablename__ = 'cpu_usage'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    log_entry_id = Column(Integer, ForeignKey('log_entry.id'))\n    user_time = Column(Integer)\n    system_time = Column(Integer)\n    idle_time = Column(Integer)",
+            "description": "Table to track detailed CPU usage statistics.",
+            "name": "CPUUsage"
+        },
+        {
+            "classname": "Process",
+            "code": "class Process(Base):\n    \"\"\"description: Table for storing information about processes in the system.\"\"\"\n    __tablename__ = 'process'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    pid = Column(Integer, nullable=False)\n    name = Column(String(150))\n    cpu_usage_id = Column(Integer, ForeignKey('cpu_usage.id'))\n    cpu_percentage = Column(Integer)",
+            "description": "Table for storing information about processes in the system.",
+            "name": "Process"
+        },
+        {
+            "classname": "Alert",
+            "code": "class Alert(Base):\n    \"\"\"description: Table to store alerts generated based on log analysis.\"\"\"\n    __tablename__ = 'alert'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    log_entry_id = Column(Integer, ForeignKey('log_entry.id'))\n    message = Column(String(255))\n    active = Column(Boolean, default=True)\n    severity = Column(String(50))",
+            "description": "Table to store alerts generated based on log analysis.",
+            "name": "Alert"
+        },
+        {
+            "classname": "AlertSettings",
+            "code": "class AlertSettings(Base):\n    \"\"\"description: Table to configure alert thresholds and conditions.\"\"\"\n    __tablename__ = 'alert_settings'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    threshold = Column(Integer)\n    condition = Column(String(100))\n    active = Column(Boolean, default=True)",
+            "description": "Table to configure alert thresholds and conditions.",
+            "name": "AlertSettings"
+        },
+        {
+            "classname": "SystemMetrics",
+            "code": "class SystemMetrics(Base):\n    \"\"\"description: Table to store general system metrics.\"\"\"\n    __tablename__ = 'system_metrics'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    log_entry_id = Column(Integer, ForeignKey('log_entry.id'))\n    cpu_load = Column(String(10))\n    memory_usage = Column(Integer)\n    disk_io = Column(String(100))",
+            "description": "Table to store general system metrics.",
+            "name": "SystemMetrics"
+        },
+        {
+            "classname": "ThresholdLog",
+            "code": "class ThresholdLog(Base):\n    \"\"\"description: Table to log threshold breaches and events.\"\"\"\n    __tablename__ = 'threshold_log'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    alert_settings_id = Column(Integer, ForeignKey('alert_settings.id'))\n    log_entry_id = Column(Integer, ForeignKey('log_entry.id'))\n    occurred_at = Column(DateTime, default=datetime.utcnow)",
+            "description": "Table to log threshold breaches and events.",
+            "name": "ThresholdLog"
+        },
+        {
+            "classname": "UserActivity",
+            "code": "class UserActivity(Base):\n    \"\"\"description: Table to store user activities related to system operations.\"\"\"\n    __tablename__ = 'user_activity'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    user_id = Column(Integer)\n    action = Column(String(255))\n    log_entry_id = Column(Integer, ForeignKey('log_entry.id'))\n    performed_at = Column(DateTime, default=datetime.utcnow)",
+            "description": "Table to store user activities related to system operations.",
+            "name": "UserActivity"
+        },
+        {
+            "classname": "Notification",
+            "code": "class Notification(Base):\n    \"\"\"description: Table to manage notifications sent to users.\"\"\"\n    __tablename__ = 'notification'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    user_id = Column(Integer)\n    message = Column(String(255))\n    sent_at = Column(DateTime, default=datetime.utcnow)",
+            "description": "Table to manage notifications sent to users.",
+            "name": "Notification"
+        },
+        {
+            "classname": "SystemEvent",
+            "code": "class SystemEvent(Base):\n    \"\"\"description: Table to log significant system events.\"\"\"\n    __tablename__ = 'system_event'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    event_name = Column(String(100))\n    log_entry_id = Column(Integer, ForeignKey('log_entry.id'))\n    description = Column(String(255))",
+            "description": "Table to log significant system events.",
+            "name": "SystemEvent"
+        },
+        {
+            "classname": "TopologyChange",
+            "code": "class TopologyChange(Base):\n    \"\"\"description: Table to log changes in the system's topology.\"\"\"\n    __tablename__ = 'topology_change'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    component_name = Column(String(100))\n    change_description = Column(String(255))\n    changed_at = Column(DateTime, default=datetime.utcnow)",
+            "description": "Table to log changes in the system's topology.",
+            "name": "TopologyChange"
+        },
+        {
+            "classname": "SystemUser",
+            "code": "class SystemUser(Base):\n    \"\"\"description: Table to manage system user details.\"\"\"\n    __tablename__ = 'system_user'\n\n    id = Column(Integer, primary_key=True, autoincrement=True)\n    username = Column(String(100), nullable=False)\n    email = Column(String(150))\n    active = Column(Boolean, default=True)",
+            "description": "Table to manage system user details.",
+            "name": "SystemUser"
+        }
+    ],
+    "rules": [],
+    "test_data": "from datetime import datetime, date\n\n# LogEntry test data\nlog_entry1 = LogEntry(timestamp=datetime(2023, 11, 22, 10, 33), message=\"CPU usage critically high\", level=\"Error\", source=\"Monitor\")\nlog_entry2 = LogEntry(timestamp=datetime(2023, 11, 22, 10, 34), message=\"Disk nearing capacity\", level=\"Warning\", source=\"Monitor\")\nlog_entry3 = LogEntry(timestamp=datetime(2023, 11, 22, 10, 35), message=\"Memory usage normal\", level=\"Info\", source=\"Monitor\")\nlog_entry4 = LogEntry(timestamp=datetime(2023, 11, 22, 10, 36), message=\"New device connected\", level=\"Info\", source=\"System\")\n\n# CPUUsage test data\ncpu_usage1 = CPUUsage(log_entry_id=1, user_time=30, system_time=15, idle_time=55)\ncpu_usage2 = CPUUsage(log_entry_id=2, user_time=50, system_time=25, idle_time=25)\ncpu_usage3 = CPUUsage(log_entry_id=3, user_time=20, system_time=10, idle_time=70)\ncpu_usage4 = CPUUsage(log_entry_id=4, user_time=40, system_time=30, idle_time=30)\n\n# Process test data\nprocess1 = Process(pid=123, name=\"Process1\", cpu_usage_id=1, cpu_percentage=10)\nprocess2 = Process(pid=456, name=\"Process2\", cpu_usage_id=1, cpu_percentage=5)\nprocess3 = Process(pid=789, name=\"Process3\", cpu_usage_id=2, cpu_percentage=20)\nprocess4 = Process(pid=101, name=\"Process4\", cpu_usage_id=2, cpu_percentage=25)\n\n# Alert test data\nalert1 = Alert(log_entry_id=1, message=\"High CPU warning\", active=True, severity=\"High\")\nalert2 = Alert(log_entry_id=2, message=\"Disk warning\", active=True, severity=\"Medium\")\nalert3 = Alert(log_entry_id=3, message=\"Memory normal\", active=False, severity=\"Low\")\nalert4 = Alert(log_entry_id=4, message=\"New device alert\", active=True, severity=\"Info\")\n\n# AlertSettings test data\nalert_settings1 = AlertSettings(threshold=90, condition=\"CPU > 80\", active=True)\nalert_settings2 = AlertSettings(threshold=80, condition=\"Disk > 75\", active=True)\nalert_settings3 = AlertSettings(threshold=70, condition=\"Memory < 60\", active=True)\nalert_settings4 = AlertSettings(threshold=60, condition=\"IO Rate High\", active=True)\n\n# SystemMetrics test data\nsystem_metrics1 = SystemMetrics(log_entry_id=1, cpu_load=\"High\", memory_usage=4096, disk_io=\"Normal\")\nsystem_metrics2 = SystemMetrics(log_entry_id=2, cpu_load=\"Moderate\", memory_usage=8192, disk_io=\"High\")\nsystem_metrics3 = SystemMetrics(log_entry_id=3, cpu_load=\"Low\", memory_usage=2048, disk_io=\"Low\")\nsystem_metrics4 = SystemMetrics(log_entry_id=4, cpu_load=\"Moderate\", memory_usage=3072, disk_io=\"Moderate\")\n\n# ThresholdLog test data\nthreshold_log1 = ThresholdLog(alert_settings_id=1, log_entry_id=1, occurred_at=datetime(2023, 11, 22, 10, 40))\nthreshold_log2 = ThresholdLog(alert_settings_id=2, log_entry_id=2, occurred_at=datetime(2023, 11, 22, 10, 45))\nthreshold_log3 = ThresholdLog(alert_settings_id=3, log_entry_id=3, occurred_at=datetime(2023, 11, 22, 10, 50))\nthreshold_log4 = ThresholdLog(alert_settings_id=4, log_entry_id=4, occurred_at=datetime(2023, 11, 22, 10, 55))\n\n# UserActivity test data\nuser_activity1 = UserActivity(user_id=1, action=\"Login\", log_entry_id=1, performed_at=datetime(2023, 11, 22, 11, 0))\nuser_activity2 = UserActivity(user_id=2, action=\"Logout\", log_entry_id=2, performed_at=datetime(2023, 11, 22, 11, 5))\nuser_activity3 = UserActivity(user_id=3, action=\"Upload File\", log_entry_id=3, performed_at=datetime(2023, 11, 22, 11, 10))\nuser_activity4 = UserActivity(user_id=4, action=\"Download File\", log_entry_id=4, performed_at=datetime(2023, 11, 22, 11, 15))\n\n# Notification test data\nnotification1 = Notification(user_id=1, message=\"High CPU Usage\", sent_at=datetime(2023, 11, 22, 12, 0))\nnotification2 = Notification(user_id=2, message=\"Disk Space Low\", sent_at=datetime(2023, 11, 22, 12, 10))\nnotification3 = Notification(user_id=3, message=\"System Back to Normal\", sent_at=datetime(2023, 11, 22, 12, 20))\nnotification4 = Notification(user_id=4, message=\"New User Registered\", sent_at=datetime(2023, 11, 22, 12, 30))\n\n# SystemEvent test data\nsystem_event1 = SystemEvent(event_name=\"Reboot\", log_entry_id=1, description=\"System rebooted successfully.\")\nsystem_event2 = SystemEvent(event_name=\"Update\", log_entry_id=2, description=\"System updated to latest version.\")\nsystem_event3 = SystemEvent(event_name=\"Backup\", log_entry_id=3, description=\"System backup completed.\")\nsystem_event4 = SystemEvent(event_name=\"Shutdown\", log_entry_id=4, description=\"System shutdown initiated.\")\n\n# TopologyChange test data\ntopology_change1 = TopologyChange(component_name=\"Server1\", change_description=\"Added new storage.\", changed_at=datetime(2023, 11, 22, 13, 0))\ntopology_change2 = TopologyChange(component_name=\"RouterX\", change_description=\"Updated firmware.\", changed_at=datetime(2023, 11, 22, 13, 10))\ntopology_change3 = TopologyChange(component_name=\"SwitchY\", change_description=\"Replaced faulty port.\", changed_at=datetime(2023, 11, 22, 13, 20))\ntopology_change4 = TopologyChange(component_name=\"FirewallZ\", change_description=\"Changed rules.\", changed_at=datetime(2023, 11, 22, 13, 30))\n\n# SystemUser test data\nsystem_user1 = SystemUser(username=\"admin\", email=\"admin@example.com\", active=True)\nsystem_user2 = SystemUser(username=\"userA\", email=\"usera@example.com\", active=True)\nsystem_user3 = SystemUser(username=\"userB\", email=\"userb@example.com\", active=False)\nsystem_user4 = SystemUser(username=\"guest\", email=\"guest@example.com\", active=True)",
+    "name": "System Monitoring"
+}

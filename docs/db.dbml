@@ -1,0 +1,122 @@
+// Copy this text, paste to https://dbdiagram.io/d
+// Or, https://databasediagram.com/app
+// Or, view in VSCode with extension: "DBML Live Preview"
+
+Project DBML {
+  Note: '''
+Alert: Table to store alerts generated based on log analysis.
+LogEntry: Table to store log entries for system monitoring.
+AlertSetting: Table to configure alert thresholds and conditions.
+CpuUsage: Table to track detailed CPU usage statistics.
+Notification: Table to manage notifications sent to users.
+Process: Table for storing information about processes in the system.
+SystemEvent: Table to log significant system events.
+SystemMetric: Table to store general system metrics.
+SystemUser: Table to manage system user details.
+ThresholdLog: Table to log threshold breaches and events.
+TopologyChange: Table to log changes in the system's topology.
+UserActivity: Table to store user activities related to system operations.
+'''
+}
+
+Table Alert {
+    id INTEGER [primary key]
+    log_entry_id INTEGER 
+    message VARCHAR(255) 
+    active BOOLEAN 
+    severity VARCHAR(50) 
+    }
+
+Table LogEntry {
+    id INTEGER [primary key]
+    timestamp DATETIME 
+    message VARCHAR(255) 
+    level VARCHAR(50) 
+    source VARCHAR(100) 
+    }
+
+Table AlertSetting {
+    id INTEGER [primary key]
+    threshold INTEGER 
+    condition VARCHAR(100) 
+    active BOOLEAN 
+    }
+
+Table CpuUsage {
+    id INTEGER [primary key]
+    log_entry_id INTEGER 
+    user_time INTEGER 
+    system_time INTEGER 
+    idle_time INTEGER 
+    }
+
+Table Notification {
+    id INTEGER [primary key]
+    user_id INTEGER 
+    message VARCHAR(255) 
+    sent_at DATETIME 
+    }
+
+Table Process {
+    id INTEGER [primary key]
+    pid INTEGER 
+    name VARCHAR(150) 
+    cpu_usage_id INTEGER 
+    cpu_percentage INTEGER 
+    }
+
+Table SystemEvent {
+    id INTEGER [primary key]
+    event_name VARCHAR(100) 
+    log_entry_id INTEGER 
+    description VARCHAR(255) 
+    }
+
+Table SystemMetric {
+    id INTEGER [primary key]
+    log_entry_id INTEGER 
+    cpu_load VARCHAR(10) 
+    memory_usage INTEGER 
+    disk_io VARCHAR(100) 
+    }
+
+Table SystemUser {
+    id INTEGER [primary key]
+    username VARCHAR(100) 
+    email VARCHAR(150) 
+    active BOOLEAN 
+    }
+
+Table ThresholdLog {
+    id INTEGER [primary key]
+    alert_settings_id INTEGER 
+    log_entry_id INTEGER 
+    occurred_at DATETIME 
+    }
+
+Table TopologyChange {
+    id INTEGER [primary key]
+    component_name VARCHAR(100) 
+    change_description VARCHAR(255) 
+    changed_at DATETIME 
+    }
+
+Table UserActivity {
+    id INTEGER [primary key]
+    user_id INTEGER 
+    action VARCHAR(255) 
+    log_entry_id INTEGER 
+    performed_at DATETIME 
+    }
+
+
+
+// Relationships
+    Ref: Alert.(log_entry_id) < LogEntry.(id)
+    Ref: CpuUsage.(log_entry_id) < LogEntry.(id)
+    Ref: Process.(cpu_usage_id) < CpuUsage.(id)
+    Ref: SystemEvent.(log_entry_id) < LogEntry.(id)
+    Ref: SystemMetric.(log_entry_id) < LogEntry.(id)
+    Ref: ThresholdLog.(alert_settings_id) < AlertSetting.(id)
+    Ref: ThresholdLog.(log_entry_id) < LogEntry.(id)
+    Ref: UserActivity.(log_entry_id) < LogEntry.(id)
